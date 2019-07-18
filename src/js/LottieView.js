@@ -3,27 +3,22 @@ import {
   findNodeHandle,
   UIManager,
   Animated,
+  NativeModules,
   View,
   Platform,
   StyleSheet,
   ViewPropTypes,
 } from 'react-native';
-import SafeModule from 'react-native-safe-module';
 import PropTypes from 'prop-types';
 
-const NativeLottieView = SafeModule.component({
-  viewName: 'LottieAnimationView',
-  mockComponent: View,
-});
+const NativeLottieView = NativeModules.LottieAnimationView
+  ? NativeModules.LottieAnimationView
+  : View;
 const AnimatedNativeLottieView = Animated.createAnimatedComponent(NativeLottieView);
 
-const LottieViewManager = SafeModule.module({
-  moduleName: 'LottieAnimationView',
-  mock: {
-    play: () => {},
-    reset: () => {},
-  },
-});
+const LottieViewManager = NativeModules.LottieAnimationView
+  ? NativeModules.LottieAnimationView
+  : { play: () => {}, reset: () => {} };
 
 const ViewStyleExceptBorderPropType = (props, propName, componentName, ...rest) => {
   const flattened = StyleSheet.flatten(props[propName] || {});
@@ -119,7 +114,7 @@ class LottieView extends React.Component {
       android: () =>
         UIManager.dispatchViewManagerCommand(
           handle,
-          UIManager.getViewManagerConfig('LottieAnimationView').Commands[name],
+          UIManager.LottieAnimationView.Commands[name],
           args,
         ),
       ios: () => LottieViewManager[name](this.getHandle(), ...args),
