@@ -3,22 +3,22 @@ import {
   findNodeHandle,
   UIManager,
   Animated,
-  NativeModules,
   View,
   Platform,
   StyleSheet,
   ViewPropTypes,
+  requireNativeComponent,
+  NativeModules,
 } from 'react-native';
 import PropTypes from 'prop-types';
 
-const NativeLottieView = NativeModules.LottieAnimationView
-  ? NativeModules.LottieAnimationView
-  : View;
+const NativeLottieView = requireNativeComponent('LottieAnimationView') || View;
 const AnimatedNativeLottieView = Animated.createAnimatedComponent(NativeLottieView);
 
-const LottieViewManager = NativeModules.LottieAnimationView
-  ? NativeModules.LottieAnimationView
-  : { play: () => {}, reset: () => {} };
+const LottieViewManager = NativeModules.LottieAnimationView || {
+  play: () => {},
+  reset: () => {},
+};
 
 const ViewStyleExceptBorderPropType = (props, propName, componentName, ...rest) => {
   const flattened = StyleSheet.flatten(props[propName] || {});
