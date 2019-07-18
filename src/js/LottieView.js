@@ -116,16 +116,12 @@ class LottieView extends React.Component {
     }
 
     return Platform.select({
-      android: () => {
-        const LottieAnimationView = UIManager.getViewManagerConfig
-          ? UIManager.getViewManagerConfig('LottieAnimationView')
-          : UIManager.LottieAnimationView;
-        return UIManager.dispatchViewManagerCommand(
+      android: () =>
+        UIManager.dispatchViewManagerCommand(
           handle,
-          LottieAnimationView.Commands[name],
+          UIManager.getViewManagerConfig('LottieAnimationView').Commands[name],
           args,
-        );
-      },
+        ),
       ios: () => LottieViewManager[name](this.getHandle(), ...args),
     })();
   }
